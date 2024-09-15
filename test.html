@@ -2,10 +2,13 @@
 <html lang="ar">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>اختبار جدول الضرب</title>
     <style>
-        body { text-align: center; direction: rtl; font-family: Arial, sans-serif; }
-        h1 { margin-bottom: 20px; }
+        body { font-family: Arial, sans-serif; text-align: center; direction: rtl; }
+        h1 { color: #333; }
+        #result { margin-top: 20px; font-size: 20px; }
+        #question { font-size: 24px; margin-bottom: 20px; }
     </style>
 </head>
 <body>
@@ -14,19 +17,21 @@
     <div id="question"></div>
     <input type="text" id="answer" placeholder="اكتب الجواب" />
     <button onclick="checkAnswer()">تحقق</button>
-
+    
     <div id="result"></div>
 
     <script>
         let correctAnswer;
-        let questionsAsked = [];
+        let questionsAsked = [];  // لتتبع الأسئلة التي تم طرحها
         const urlParams = new URLSearchParams(window.location.search);
         const table = urlParams.get('table');
 
+        // توليد سؤال عشوائي بدون تكرار
         function generateQuestion() {
             if (questionsAsked.length >= 12) {
+                // إذا تمت الإجابة على كل الأسئلة، ينتهي الاختبار
                 document.getElementById('question').textContent = 'لقد أكملت الاختبار!';
-                document.getElementById('answer').style.display = 'none';
+                document.getElementById('answer').style.display = 'none';  // إخفاء حقل الإجابة
                 return;
             }
 
@@ -36,30 +41,33 @@
             } while (questionsAsked.includes(num));
 
             correctAnswer = table * num;
-            document.getElementById('question').textContent = `كم يساوي ${num} × ${table}؟`;
-            questionsAsked.push(num);
+            document.getElementById('question').textContent = `كم يساوي ${num} × ${table}؟`;  // السؤال باللغة العربية
+            questionsAsked.push(num);  // إضافة الرقم إلى قائمة الأسئلة المطروحة
         }
 
+        // تحويل الأرقام العربية إلى الإنجليزية (للتأكد من قبول الإجابات بالأرقام الهندية)
         function convertToEnglishNumbers(str) {
             return str.replace(/[٠-٩]/g, d => "٠١٢٣٤٥٦٧٨٩".indexOf(d));
         }
 
+        // تحقق من الإجابة
         function checkAnswer() {
             const answerInput = document.getElementById('answer').value.trim();
-            const answer = parseInt(convertToEnglishNumbers(answerInput));
+            const answer = parseInt(convertToEnglishNumbers(answerInput));  // تحويل الأرقام إلى الإنجليزية للتأكد من صحتها
             const resultElement = document.getElementById('result');
 
             if (answer === correctAnswer) {
                 resultElement.textContent = 'إجابة صحيحة!';
                 resultElement.style.color = 'green';
-                generateQuestion();
+                generateQuestion();  // إنشاء سؤال جديد
             } else {
                 resultElement.textContent = 'إجابة خاطئة، حاول مرة أخرى!';
                 resultElement.style.color = 'red';
             }
-            document.getElementById('answer').value = '';
+            document.getElementById('answer').value = '';  // إعادة ضبط الحقل
         }
 
+        // بدء الاختبار
         generateQuestion();
     </script>
 </body>
