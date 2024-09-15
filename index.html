@@ -5,25 +5,37 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>اختيار جدول الضرب</title>
     <style>
-        body { font-family: Arial, sans-serif; text-align: center; }
+        body { font-family: Arial, sans-serif; text-align: center; direction: rtl; }
         h1 { color: #333; }
-        button { margin: 10px; padding: 10px 20px; font-size: 18px; }
+        button { margin: 10px; padding: 15px 30px; font-size: 18px; }
     </style>
 </head>
 <body>
-    <h1>اختر جدول الضرب لمراجعته</h1>
+    <h1>اختر الخيار المناسب</h1>
     
-    <!-- أزرار لاختيار الجدول -->
-    <button onclick="location.href='review.html?table=2'">جدول 2</button>
-    <button onclick="location.href='review.html?table=3'">جدول 3</button>
-    <button onclick="location.href='review.html?table=4'">جدول 4</button>
-    <button onclick="location.href='review.html?table=5'">جدول 5</button>
-    <button onclick="location.href='review.html?table=6'">جدول 6</button>
-    <button onclick="location.href='review.html?table=7'">جدول 7</button>
-    <button onclick="location.href='review.html?table=8'">جدول 8</button>
-    <button onclick="location.href='review.html?table=9'">جدول 9</button>
-    <button onclick="location.href='review.html?table=10'">جدول 10</button>
-    <button onclick="location.href='review.html?table=11'">جدول 11</button>
-    <button onclick="location.href='review.html?table=12'">جدول 12</button>
+    <!-- خيار مراجعة جدول معين مع اختباره -->
+    <button onclick="chooseTable('reviewWithTest')">مراجعة جدول الضرب مع الاختبار</button>
+
+    <!-- خيار اختيار جدول معين والاختبار فيه -->
+    <button onclick="chooseTable('testOnly')">اختيار جدول معين للاختبار</button>
+
+    <!-- خيار الاختبار النهائي لجميع الجداول -->
+    <button onclick="location.href='final_test.html'">الاختبار النهائي لجميع الجداول</button>
+
+    <script>
+        // دالة لاختيار الجدول بناءً على نوع الاختبار (مراجعة مع اختبار أو اختبار فقط)
+        function chooseTable(type) {
+            const table = prompt("اختر رقم جدول الضرب من 2 إلى 12:");
+            if (table >= 2 && table <= 12) {
+                if (type === 'reviewWithTest') {
+                    location.href = 'review.html?table=' + table;
+                } else if (type === 'testOnly') {
+                    location.href = 'test.html?table=' + table;
+                }
+            } else {
+                alert("يرجى إدخال رقم صحيح بين 2 و 12.");
+            }
+        }
+    </script>
 </body>
 </html>
