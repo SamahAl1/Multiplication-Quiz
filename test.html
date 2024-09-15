@@ -5,16 +5,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>اختبار جدول الضرب</title>
     <style>
-        body { font-family: Arial, sans-serif; text-align: center; }
+        body { font-family: Arial, sans-serif; text-align: center; direction: rtl; }
         h1 { color: #333; }
         #result { margin-top: 20px; font-size: 20px; }
+        #question { font-size: 24px; margin-bottom: 20px; }
     </style>
 </head>
 <body>
     <h1>اختبار جدول الضرب</h1>
     
     <div id="question"></div>
-    <input type="number" id="answer" placeholder="اكتب الجواب" />
+    <input type="text" id="answer" placeholder="اكتب الجواب" />
     <button onclick="checkAnswer()">تحقق</button>
     
     <div id="result"></div>
@@ -40,14 +41,21 @@
             } while (questionsAsked.includes(num));
 
             correctAnswer = table * num;
-            document.getElementById('question').textContent = `كم يساوي ${table} × ${num}؟`;
+            document.getElementById('question').textContent = `كم يساوي ${num} × ${table}؟`;  // السؤال باللغة العربية
             questionsAsked.push(num);  // إضافة الرقم إلى قائمة الأسئلة المطروحة
+        }
+
+        // تحويل الأرقام العربية إلى الإنجليزية (للتأكد من قبول الإجابات بالأرقام الهندية)
+        function convertToEnglishNumbers(str) {
+            return str.replace(/[٠-٩]/g, d => "٠١٢٣٤٥٦٧٨٩".indexOf(d));
         }
 
         // تحقق من الإجابة
         function checkAnswer() {
-            const answer = parseInt(document.getElementById('answer').value);
+            const answerInput = document.getElementById('answer').value.trim();
+            const answer = parseInt(convertToEnglishNumbers(answerInput));  // تحويل الأرقام إلى الإنجليزية للتأكد من صحتها
             const resultElement = document.getElementById('result');
+
             if (answer === correctAnswer) {
                 resultElement.textContent = 'إجابة صحيحة!';
                 resultElement.style.color = 'green';
