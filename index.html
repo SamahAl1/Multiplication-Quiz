@@ -3,170 +3,27 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>تدريب جدول الضرب</title>
+    <title>اختيار جدول الضرب</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f0f0f5;
-            color: #333;
-            text-align: center;
-        }
-        h1 {
-            color: #4CAF50;
-        }
-        .container {
-            width: 80%;
-            margin: auto;
-        }
-        .table-container {
-            display: flex;
-            justify-content: space-around;
-            flex-wrap: wrap;
-        }
-        .table {
-            background-color: #fff;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            padding: 15px;
-            margin: 15px;
-            flex: 1 1 30%;
-            max-width: 300px;
-        }
-        .table h2 {
-            color: #333;
-        }
-        button {
-            background-color: #4CAF50;
-            color: white;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            margin: 10px 0;
-        }
-        button:hover {
-            background-color: #45a049;
-        }
-        .question {
-            font-size: 20px;
-            margin: 20px 0;
-        }
-        .feedback {
-            font-size: 18px;
-            color: #f44336;
-        }
-        .success {
-            color: #4CAF50;
-        }
+        body { font-family: Arial, sans-serif; text-align: center; }
+        h1 { color: #333; }
+        button { margin: 10px; padding: 10px 20px; font-size: 18px; }
     </style>
-    <script>
-        let currentTable = 2;
-        let currentQuestion = 1;
-        let correctAnswers = [];
-        let wrongAnswers = [];
-        let questions = [];
-
-        function loadTable(table) {
-            currentTable = table;
-            currentQuestion = 1;
-            correctAnswers = [];
-            wrongAnswers = [];
-            document.getElementById("question-container").style.display = "none";
-            document.getElementById("feedback").textContent = "";
-            let tableContent = '<h2>جدول الضرب لـ ' + table + '</h2>';
-            for (let i = 1; i <= 12; i++) {
-                tableContent += table + " × " + i + " = " + (table * i) + "<br>";
-            }
-            tableContent += '<button onclick="startQuiz()">لقد انتهيت</button>';
-            document.getElementById("table-content").innerHTML = tableContent;
-        }
-
-        function startQuiz() {
-            questions = [];
-            for (let i = 1; i <= 12; i++) {
-                questions.push({ num1: currentTable, num2: i });
-            }
-            shuffle(questions);
-            askQuestion();
-        }
-
-        function askQuestion() {
-            if (currentQuestion > questions.length) {
-                finishQuiz();
-                return;
-            }
-            let question = questions[currentQuestion - 1];
-            document.getElementById("question").textContent = question.num1 + " × " + question.num2;
-            document.getElementById("answer").value = "";
-            document.getElementById("question-container").style.display = "block";
-        }
-
-        function submitAnswer() {
-            let question = questions[currentQuestion - 1];
-            let userAnswer = parseInt(document.getElementById("answer").value);
-            if (userAnswer === question.num1 * question.num2) {
-                correctAnswers.push(question);
-                document.getElementById("feedback").textContent = "إجابة صحيحة!";
-                document.getElementById("feedback").classList.add("success");
-                document.getElementById("feedback").classList.remove("feedback");
-            } else {
-                document.getElementById("feedback").textContent = "إجابة خاطئة! حاول مرة أخرى.";
-                document.getElementById("feedback").classList.add("feedback");
-                document.getElementById("feedback").classList.remove("success");
-                return;
-            }
-            currentQuestion++;
-            askQuestion();
-        }
-
-        function finishQuiz() {
-            if (wrongAnswers.length > 0) {
-                document.getElementById("feedback").textContent = "لديك بعض الأخطاء. سيتم إعادة اختبارك في الأسئلة الخاطئة.";
-                questions = wrongAnswers;
-                wrongAnswers = [];
-                currentQuestion = 1;
-                askQuestion();
-            } else {
-                document.getElementById("feedback").textContent = "لقد أنهيت الاختبار بنجاح!";
-            }
-        }
-
-        function shuffle(array) {
-            for (let i = array.length - 1; i > 0; i--) {
-                const j = Math.floor(Math.random() * (i + 1));
-                [array[i], array[j]] = [array[j], array[i]];
-            }
-        }
-    </script>
 </head>
 <body>
-
-    <div class="container">
-        <h1>تدريب جدول الضرب</h1>
-        <div class="table-container">
-            <div class="table" onclick="loadTable(2)">جدول الضرب 2</div>
-            <div class="table" onclick="loadTable(3)">جدول الضرب 3</div>
-            <div class="table" onclick="loadTable(4)">جدول الضرب 4</div>
-            <div class="table" onclick="loadTable(5)">جدول الضرب 5</div>
-            <div class="table" onclick="loadTable(6)">جدول الضرب 6</div>
-            <div class="table" onclick="loadTable(7)">جدول الضرب 7</div>
-            <div class="table" onclick="loadTable(8)">جدول الضرب 8</div>
-            <div class="table" onclick="loadTable(9)">جدول الضرب 9</div>
-            <div class="table" onclick="loadTable(10)">جدول الضرب 10</div>
-            <div class="table" onclick="loadTable(11)">جدول الضرب 11</div>
-            <div class="table" onclick="loadTable(12)">جدول الضرب 12</div>
-        </div>
-
-        <div id="table-content"></div>
-
-        <div id="question-container" style="display: none;">
-            <div class="question" id="question"></div>
-            <input type="number" id="answer">
-            <button onclick="submitAnswer()">إرسال</button>
-        </div>
-
-        <div id="feedback"></div>
-    </div>
-
+    <h1>اختر جدول الضرب لمراجعته</h1>
+    
+    <!-- أزرار لاختيار الجدول -->
+    <button onclick="location.href='review.html?table=2'">جدول 2</button>
+    <button onclick="location.href='review.html?table=3'">جدول 3</button>
+    <button onclick="location.href='review.html?table=4'">جدول 4</button>
+    <button onclick="location.href='review.html?table=5'">جدول 5</button>
+    <button onclick="location.href='review.html?table=6'">جدول 6</button>
+    <button onclick="location.href='review.html?table=7'">جدول 7</button>
+    <button onclick="location.href='review.html?table=8'">جدول 8</button>
+    <button onclick="location.href='review.html?table=9'">جدول 9</button>
+    <button onclick="location.href='review.html?table=10'">جدول 10</button>
+    <button onclick="location.href='review.html?table=11'">جدول 11</button>
+    <button onclick="location.href='review.html?table=12'">جدول 12</button>
 </body>
 </html>
