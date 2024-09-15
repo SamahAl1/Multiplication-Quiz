@@ -7,40 +7,89 @@
     <style>
         body { font-family: Arial, sans-serif; text-align: center; }
         h1 { color: #333; }
-        #result { margin-top: 20px; font-size: 20px; }
+        #result, #correctAnswerDisplay { margin-top: 20px; font-size: 20px; }
+        #multiplicationTable { margin-top: 20px; }
     </style>
 </head>
 <body>
     <h1>اختبر نفسك في جدول الضرب</h1>
-    <p>أدخل الإجابة الصحيحة:</p>
     
-    <div id="question"></div>
-    
-    <input type="number" id="answer" placeholder="اكتب الجواب" />
-    <button onclick="checkAnswer()">تحقق</button>
+    <!-- اختيار جدول ضرب -->
+    <label for="tableSelect">اختر جدول الضرب الذي تريد حفظه:</label>
+    <select id="tableSelect">
+        <option value="2">جدول ضرب 2</option>
+        <option value="3">جدول ضرب 3</option>
+        <option value="4">جدول ضرب 4</option>
+        <!-- يمكنك إضافة المزيد حسب الحاجة -->
+    </select>
+    <button onclick="showTable()">عرض الجدول</button>
 
+    <!-- عرض جدول الضرب -->
+    <div id="multiplicationTable"></div>
+
+    <!-- اختبار بعد عرض الجدول -->
+    <div id="questionSection" style="display:none;">
+        <p>اختبار على الجدول المختار:</p>
+        <div id="question"></div>
+        <input type="number" id="answer" placeholder="اكتب الجواب" />
+        <button onclick="checkAnswer()">تحقق</button>
+    </div>
+
+    <!-- لعرض النتيجة والإجابة الصحيحة -->
+    <div id="correctAnswerDisplay" style="display:none;"></div>
     <div id="result"></div>
 
     <script>
-        let num1 = Math.floor(Math.random() * 12) + 1;
-        let num2 = Math.floor(Math.random() * 12) + 1;
-        let correctAnswer = num1 * num2;
+        let selectedTable = 2; // افتراضي على جدول 2
+        let num1, num2, correctAnswer;
 
-        document.getElementById("question").innerHTML = `${num1} × ${num2} = ?`;
+        // دالة لعرض جدول الضرب
+        function showTable() {
+            selectedTable = document.getElementById("tableSelect").value;
+            let tableHTML = `<h3>جدول ضرب ${selectedTable}</h3><ul>`;
+            
+            for (let i = 1; i <= 12; i++) {
+                tableHTML += `<li>${selectedTable} × ${i} = ${selectedTable * i}</li>`;
+            }
+            tableHTML += "</ul>";
 
+            document.getElementById("multiplicationTable").innerHTML = tableHTML;
+
+            // إظهار قسم الأسئلة للاختبار
+            document.getElementById("questionSection").style.display = "block";
+
+            // إنشاء سؤال أولي بعد عرض الجدول
+            generateQuestion();
+        }
+
+        // دالة لإنشاء مسألة اختبار من الجدول المختار
+        function generateQuestion() {
+            num1 = selectedTable;
+            num2 = Math.floor(Math.random() * 12) + 1;
+            correctAnswer = num1 * num2;
+
+            document.getElementById("question").innerHTML = `${num1} × ${num2} = ؟`;
+            document.getElementById("correctAnswerDisplay").style.display = "none"; // اخفاء الناتج عند كل سؤال جديد
+            document.getElementById("result").innerHTML = ""; // مسح النتيجة السابقة
+        }
+
+        // دالة للتحقق من الإجابة
         function checkAnswer() {
             let userAnswer = document.getElementById("answer").value;
+
+            // عرض الناتج الصحيح أولاً
+            document.getElementById("correctAnswerDisplay").style.display = "block";
+            document.getElementById("correctAnswerDisplay").innerHTML = `الناتج الصحيح هو: ${correctAnswer}`;
+
+            // التحقق من الإجابة بعد عرض الناتج
             if (userAnswer == correctAnswer) {
                 document.getElementById("result").innerHTML = "إجابة صحيحة!";
             } else {
-                document.getElementById("result").innerHTML = `خطأ! الإجابة الصحيحة هي: ${correctAnswer}`;
+                document.getElementById("result").innerHTML = "إجابة خاطئة!";
             }
 
-            // لتجديد السؤال
-            num1 = Math.floor(Math.random() * 12) + 1;
-            num2 = Math.floor(Math.random() * 12) + 1;
-            correctAnswer = num1 * num2;
-            document.getElementById("question").innerHTML = `${num1} × ${num2} = ?`;
+            // إنشاء سؤال جديد بعد التحقق
+            generateQuestion();
             document.getElementById("answer").value = "";
         }
     </script>
