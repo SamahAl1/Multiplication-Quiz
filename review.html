@@ -2,35 +2,33 @@
 <html lang="ar">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>مراجعة جدول الضرب</title>
     <style>
-        body { text-align: center; direction: rtl; font-family: Arial, sans-serif; }
-        h1 { margin-bottom: 20px; }
+        body { font-family: Arial, sans-serif; text-align: center; }
+        h1 { color: #333; }
+        ul { list-style-type: none; padding: 0; }
+        li { font-size: 24px; margin: 5px 0; }
+        button { margin-top: 20px; padding: 10px 20px; font-size: 18px; }
     </style>
 </head>
 <body>
     <h1>مراجعة جدول الضرب</h1>
+    <ul id="multiplicationTable"></ul>
     
-    <div id="table-content"></div>
-    <button onclick="goToTest()">لقد انتهيت من المراجعة</button>
+    <button onclick="location.href='test.html?table=' + table">لقد انتهيت</button>
 
     <script>
+        // الحصول على الرقم من الرابط
         const urlParams = new URLSearchParams(window.location.search);
         const table = urlParams.get('table');
-        const tableContent = document.getElementById('table-content');
 
-        // عرض الجدول بناءً على الاختيار
-        if (table) {
-            let content = '';
-            for (let i = 1; i <= 12; i++) {
-                content += `<p>${table} × ${i} = ${table * i}</p>`;
-            }
-            tableContent.innerHTML = content;
-        }
-
-        // الانتقال إلى صفحة الاختبار
-        function goToTest() {
-            window.location.href = `test.html?table=${table}`;
+        // عرض جدول الضرب
+        const tableElement = document.getElementById('multiplicationTable');
+        for (let i = 1; i <= 12; i++) {
+            const listItem = document.createElement('li');
+            listItem.textContent = `${table} × ${i} = ${table * i}`;
+            tableElement.appendChild(listItem);
         }
     </script>
 </body>
