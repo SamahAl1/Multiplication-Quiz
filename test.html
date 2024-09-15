@@ -21,14 +21,27 @@
 
     <script>
         let correctAnswer;
+        let questionsAsked = [];  // لتتبع الأسئلة التي تم طرحها
         const urlParams = new URLSearchParams(window.location.search);
         const table = urlParams.get('table');
 
-        // توليد سؤال عشوائي
+        // توليد سؤال عشوائي بدون تكرار
         function generateQuestion() {
-            let num = Math.floor(Math.random() * 12) + 1;
+            if (questionsAsked.length >= 12) {
+                // إذا تمت الإجابة على كل الأسئلة، ينتهي الاختبار
+                document.getElementById('question').textContent = 'لقد أكملت الاختبار!';
+                document.getElementById('answer').style.display = 'none';  // إخفاء حقل الإجابة
+                return;
+            }
+
+            let num;
+            do {
+                num = Math.floor(Math.random() * 12) + 1;
+            } while (questionsAsked.includes(num));
+
             correctAnswer = table * num;
             document.getElementById('question').textContent = `كم يساوي ${table} × ${num}؟`;
+            questionsAsked.push(num);  // إضافة الرقم إلى قائمة الأسئلة المطروحة
         }
 
         // تحقق من الإجابة
