@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>اختبار جدول الضرب</title>
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; }
+        h1 { color: #333; }
+        #result { margin-top: 20px; font-size: 20px; }
+    </style>
+</head>
+<body>
+    <h1>اختبار جدول الضرب</h1>
+    
+    <div id="question"></div>
+    <input type="number" id="answer" placeholder="اكتب الجواب" />
+    <button onclick="checkAnswer()">تحقق</button>
+    
+    <div id="result"></div>
+
+    <script>
+        let correctAnswer;
+        const urlParams = new URLSearchParams(window.location.search);
+        const table = urlParams.get('table');
+
+        // توليد سؤال عشوائي
+        function generateQuestion() {
+            let num = Math.floor(Math.random() * 12) + 1;
+            correctAnswer = table * num;
+            document.getElementById('question').textContent = `كم يساوي ${table} × ${num}؟`;
+        }
+
+        // تحقق من الإجابة
+        function checkAnswer() {
+            const answer = parseInt(document.getElementById('answer').value);
+            const resultElement = document.getElementById('result');
+            if (answer === correctAnswer) {
+                resultElement.textContent = 'إجابة صحيحة!';
+                resultElement.style.color = 'green';
+                generateQuestion();  // إنشاء سؤال جديد
+            } else {
+                resultElement.textContent = 'إجابة خاطئة، حاول مرة أخرى!';
+                resultElement.style.color = 'red';
+            }
+            document.getElementById('answer').value = '';  // إعادة ضبط الحقل
+        }
+
+        // بدء الاختبار
+        generateQuestion();
+    </script>
+</body>
+</html>
