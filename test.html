@@ -17,12 +17,14 @@
 <body>
     <h1>اختبار جدول الضرب</h1>
     
+    <!-- جزء الأسئلة -->
     <div id="question"></div>
     <input type="text" id="answer" placeholder="اكتب الجواب" />
     <button onclick="checkAnswer()">تحقق</button>
     
     <div id="result"></div>
 
+    <!-- جزء النهاية -->
     <div id="finishedMessage" style="display: none;">
         <p id="message">لقد أكملت الاختبار!</p>
         <button onclick="window.location.href='index.html'">العودة إلى الصفحة الرئيسية</button>
@@ -30,16 +32,19 @@
 
     <script>
         let correctAnswer;
-        let questionsAsked = [];
+        let attempts = 0;  // عداد المحاولات لكل سؤال
+        let questionsAsked = [];  // لتتبع الأسئلة التي تم طرحها
         const urlParams = new URLSearchParams(window.location.search);
-        const table = urlParams.get('table') || 2;
+        const table = urlParams.get('table') || 2;  // جدول الضرب الافتراضي هو 2 في حال عدم تحديده
 
+        // توليد سؤال عشوائي بدون تكرار
         function generateQuestion() {
             if (questionsAsked.length >= 12) {
-                document.getElementById('question').style.display = 'none';
-                document.getElementById('answer').style.display = 'none';
-                document.getElementById('result').style.display = 'none';
-                document.getElementById('finishedMessage').style.display = 'block';
+                // إذا تمت الإجابة على كل الأسئلة، ينتهي الاختبار
+                document.getElementById('question').style.display = 'none';  // إخفاء السؤال
+                document.getElementById('answer').style.display = 'none';  // إخفاء حقل الإجابة
+                document.getElementById('result').style.display = 'none';  // إخفاء النتيجة
+                document.getElementById('finishedMessage').style.display = 'block';  // عرض رسالة النهاية
                 return;
             }
 
@@ -49,30 +54,41 @@
             } while (questionsAsked.includes(num));
 
             correctAnswer = table * num;
-            document.getElementById('question').textContent = `كم يساوي ${num} × ${table}؟`;
-            questionsAsked.push(num);
+            document.getElementById('question').textContent = `كم يساوي ${num} × ${table}؟`;  // السؤال باللغة العربية
+            questionsAsked.push(num);  // إضافة الرقم إلى قائمة الأسئلة المطروحة
+            attempts = 0;  // إعادة ضبط عدد المحاولات
         }
 
+        // تحويل الأرقام العربية إلى الإنجليزية (للتأكد من قبول الإجابات بالأرقام العربية)
         function convertToEnglishNumbers(str) {
             return str.replace(/[٠-٩]/g, d => "٠١٢٣٤٥٦٧٨٩".indexOf(d));
         }
 
+        // تحقق من الإجابة
         function checkAnswer() {
             const answerInput = document.getElementById('answer').value.trim();
-            const answer = parseInt(convertToEnglishNumbers(answerInput));
+            const answer = parseInt(convertToEnglishNumbers(answerInput));  // تحويل الأرقام إلى الإنجليزية للتأكد من صحتها
             const resultElement = document.getElementById('result');
 
             if (answer === correctAnswer) {
                 resultElement.textContent = 'إجابة صحيحة!';
                 resultElement.style.color = 'green';
-                generateQuestion();
+                setTimeout(generateQuestion, 1000);  // الانتقال للسؤال التالي بعد ثانية
             } else {
-                resultElement.textContent = 'إجابة خاطئة، حاول مرة أخرى!';
-                resultElement.style.color = 'red';
+                attempts++;  // زيادة عداد المحاولات
+                if (attempts < 2) {
+                    resultElement.textContent = 'إجابة خاطئة، حاول مرة أخرى!';
+                    resultElement.style.color = 'red';
+                } else {
+                    resultElement.textContent = `إجابة خاطئة، الإجابة الصحيحة هي: ${correctAnswer}`;
+                    resultElement.style.color = 'red';
+                    setTimeout(generateQuestion, 2000);  // الانتقال للسؤال التالي بعد عرض الإجابة الصحيحة
+                }
             }
-            document.getElementById('answer').value = '';
+            document.getElementById('answer').value = '';  // إعادة ضبط الحقل
         }
 
+        // بدء الاختبار
         generateQuestion();
     </script>
 </body>
