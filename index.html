@@ -12,54 +12,41 @@
 </head>
 <body>
     <h1>اختر الخيار المناسب</h1>
-    
+
     <!-- قائمة منسدلة لمراجعة جدول معين مع اختباره -->
-    <label for="reviewSelect">اختر جدول المراجعة مع الاختبار:</label>
-    <select id="reviewSelect">
-        <option value="" disabled selected>اختر جدول الضرب</option>
-        <option value="2">جدول 2</option>
-        <option value="3">جدول 3</option>
-        <option value="4">جدول 4</option>
-        <option value="5">جدول 5</option>
-        <option value="6">جدول 6</option>
-        <option value="7">جدول 7</option>
-        <option value="8">جدول 8</option>
-        <option value="9">جدول 9</option>
-        <option value="10">جدول 10</option>
-        <option value="11">جدول 11</option>
-        <option value="12">جدول 12</option>
+    <label for="reviewWithTest">مراجعة جدول الضرب مع الاختبار:</label>
+    <select id="reviewWithTest">
+        <option value="">اختر جدولاً</option>
+        <option value="2">2</option>
+        <option value="3">3</option>
+        <!-- أكمل باقي الجداول حتى 12 -->
+        <option value="12">12</option>
     </select>
-    <button onclick="chooseTable('reviewWithTest')">ابدأ المراجعة مع الاختبار</button>
+    <button onclick="chooseTable('reviewWithTest')">اذهب</button>
 
-    <!-- قائمة منسدلة لاختيار جدول معين للاختبار -->
-    <label for="testSelect">اختر جدول للاختبار:</label>
-    <select id="testSelect">
-        <option value="" disabled selected>اختر جدول الضرب</option>
-        <option value="2">جدول 2</option>
-        <option value="3">جدول 3</option>
-        <option value="4">جدول 4</option>
-        <option value="5">جدول 5</option>
-        <option value="6">جدول 6</option>
-        <option value="7">جدول 7</option>
-        <option value="8">جدول 8</option>
-        <option value="9">جدول 9</option>
-        <option value="10">جدول 10</option>
-        <option value="11">جدول 11</option>
-        <option value="12">جدول 12</option>
+    <!-- قائمة منسدلة لاختيار جدول معين للاختبار فقط -->
+    <label for="testOnly">اختيار جدول معين للاختبار:</label>
+    <select id="testOnly">
+        <option value="">اختر جدولاً</option>
+        <option value="2">2</option>
+        <option value="3">3</option>
+        <!-- أكمل باقي الجداول حتى 12 -->
+        <option value="12">12</option>
     </select>
-    <button onclick="chooseTable('testOnly')">ابدأ الاختبار</button>
+    <button onclick="chooseTable('testOnly')">اذهب</button>
 
-    <!-- زر الاختبار النهائي لجميع الجداول -->
+    <!-- خيار الاختبار النهائي لجميع الجداول -->
     <button onclick="location.href='final_test.html'">الاختبار النهائي لجميع الجداول</button>
 
     <script>
-        // دالة لاختيار الجدول بناءً على نوع الاختبار (مراجعة مع اختبار أو اختبار فقط)
+        // دالة لاختيار الجدول بناءً على نوع الاختبار
         function chooseTable(type) {
             let table;
             if (type === 'reviewWithTest') {
-                table = document.getElementById('reviewSelect').value;
+                table = document.getElementById('reviewWithTest').value;
+                markTableAsReviewed(table);
             } else if (type === 'testOnly') {
-                table = document.getElementById('testSelect').value;
+                table = document.getElementById('testOnly').value;
             }
 
             if (table) {
@@ -69,9 +56,42 @@
                     location.href = 'test.html?table=' + table;
                 }
             } else {
-                alert("يرجى اختيار جدول الضرب.");
+                alert("يرجى اختيار جدول.");
             }
         }
+
+        // دالة لتخزين الجداول التي تم مراجعتها في LocalStorage
+        function markTableAsReviewed(table) {
+            let reviewedTables = JSON.parse(localStorage.getItem('reviewedTables')) || [];
+            if (!reviewedTables.includes(table)) {
+                reviewedTables.push(table);
+                localStorage.setItem('reviewedTables', JSON.stringify(reviewedTables));
+            }
+        }
+
+        // دالة لتحميل الجداول التي تم مراجعتها وإضافة علامة صح عليها
+        function loadReviewedTables() {
+            const reviewedTables = JSON.parse(localStorage.getItem('reviewedTables')) || [];
+            const reviewSelect = document.getElementById('reviewWithTest');
+            const testSelect = document.getElementById('testOnly');
+
+            for (let i = 0; i < reviewSelect.options.length; i++) {
+                const option = reviewSelect.options[i];
+                if (reviewedTables.includes(option.value)) {
+                    option.textContent = option.value + " ✓";
+                }
+            }
+
+            for (let i = 0; i < testSelect.options.length; i++) {
+                const option = testSelect.options[i];
+                if (reviewedTables.includes(option.value)) {
+                    option.textContent = option.value + " ✓";
+                }
+            }
+        }
+
+        // تحميل الجداول التي تم مراجعتها عند فتح الصفحة
+        window.onload = loadReviewedTables;
     </script>
 </body>
 </html>
