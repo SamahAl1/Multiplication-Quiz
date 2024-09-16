@@ -5,85 +5,97 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>الاختبار النهائي</title>
     <style>
-        body { font-family: Arial, sans-serif; text-align: center; direction: rtl; }
+        body { font-family: Arial, sans-serif; text-align: center; }
         h1 { color: #333; }
         #result { margin-top: 20px; font-size: 20px; }
-        #question { font-size: 24px; margin-bottom: 20px; }
-        button { margin-top: 20px; padding: 10px; font-size: 16px; }
-        .correct { color: green; }
-        .incorrect { color: red; }
+        button { margin: 10px; padding: 10px 20px; font-size: 16px; }
     </style>
 </head>
 <body>
     <h1>الاختبار النهائي لجميع الجداول</h1>
     
     <div id="question"></div>
-    <input type="text" id="answer" placeholder="اكتب الجواب" />
+    <input type="number" id="answer" placeholder="اكتب الجواب" />
     <button onclick="checkAnswer()">تحقق</button>
     
     <div id="result"></div>
+    
+    <div id="retrySection" style="display: none;">
+        <p>سوف يتم الاختبار في الأرقام الخاطئة</p>
+        <button onclick="retryWrongAnswers()">ابدأ الاختبار مرة أخرى</button>
+    </div>
 
-    <!-- جزء النهاية -->
-    <div id="finishedMessage" style="display: none;">
-        <p id="message">لقد أكملت الاختبار!</p>
-        <button onclick="window.location.href='index.html'">العودة إلى الصفحة الرئيسية</button>
+    <div id="successMessage" style="display: none;">
+        <p>لقد تم حل جميع الأسئلة بشكل صحيح!</p>
     </div>
 
     <script>
         let correctAnswer;
-        let attempts = 0;  // عداد المحاولات لكل سؤال
-        let questionsAsked = [];  // لتتبع الأسئلة التي تم طرحها
-
+        let wrongAnswers = []; // قائمة بالأرقام التي تم الخطأ فيها
+        let retryMode = false; // وضع إعادة المحاولة
+        let wrongQuestions = []; // الأسئلة الخاطئة
+        let currentQuestion = {}; // السؤال الحالي
+        
         // توليد سؤال عشوائي من جميع الجداول
         function generateQuestion() {
-            if (questionsAsked.length >= 12) {
-                // إذا تمت الإجابة على 12 سؤال، ينتهي الاختبار
-                document.getElementById('question').style.display = 'none';  // إخفاء السؤال
-                document.getElementById('answer').style.display = 'none';  // إخفاء حقل الإجابة
-                document.getElementById('result').style.display = 'none';  // إخفاء النتيجة
-                document.getElementById('finishedMessage').style.display = 'block';  // عرض رسالة النهاية
-                return;
+            if (!retryMode && wrongAnswers.length >= 12) {
+                // إذا انتهى الاختبار ولم يكن هناك أخطاء
+                if (wrongQuestions.length === 0) {
+                    document.getElementById('successMessage').style.display = 'block';
+                    return;
+                } else {
+                    document.getElementById('retrySection').style.display = 'block';
+                    return;
+                }
+            }
+            
+            if (retryMode) {
+                // في وضع إعادة المحاولة، توليد سؤال من الأخطاء
+                currentQuestion = wrongQuestions[Math.floor(Math.random() * wrongQuestions.length)];
+            } else {
+                // في الاختبار العادي، توليد سؤال جديد
+                let table = Math.floor(Math.random() * 11) + 2; // جدول عشوائي من 2 إلى 12
+                let num = Math.floor(Math.random() * 12) + 1; // رقم عشوائي من 1 إلى 12
+                currentQuestion = {table, num};
             }
 
-            let table, num;
-            do {
-                table = Math.floor(Math.random() * 11) + 2; // جدول عشوائي من 2 إلى 12
-                num = Math.floor(Math.random() * 12) + 1; // رقم عشوائي من 1 إلى 12
-            } while (questionsAsked.includes(`${table}x${num}`));
-
-            correctAnswer = table * num;
-            document.getElementById('question').textContent = `كم يساوي ${table} × ${num}؟`;  // السؤال باللغة العربية
-            questionsAsked.push(`${table}x${num}`);  // إضافة السؤال إلى قائمة الأسئلة المطروحة
-            attempts = 0;  // إعادة ضبط عدد المحاولات
-        }
-
-        // تحويل الأرقام العربية إلى الإنجليزية (للتأكد من قبول الإجابات بالأرقام العربية)
-        function convertToEnglishNumbers(str) {
-            return str.replace(/[٠-٩]/g, d => "٠١٢٣٤٥٦٧٨٩".indexOf(d));
+            correctAnswer = currentQuestion.table * currentQuestion.num;
+            document.getElementById('question').textContent = `كم يساوي ${currentQuestion.table} × ${currentQuestion.num}؟`;
         }
 
         // تحقق من الإجابة
         function checkAnswer() {
-            const answerInput = document.getElementById('answer').value.trim();
-            const answer = parseInt(convertToEnglishNumbers(answerInput));  // تحويل الأرقام إلى الإنجليزية للتأكد من صحتها
+            const answer = parseInt(document.getElementById('answer').value);
             const resultElement = document.getElementById('result');
 
             if (answer === correctAnswer) {
                 resultElement.textContent = 'إجابة صحيحة!';
                 resultElement.style.color = 'green';
-                setTimeout(generateQuestion, 1000);  // الانتقال للسؤال التالي بعد ثانية
+
+                // إزالة السؤال من قائمة الأسئلة الخاطئة إذا كان في وضع المحاولة
+                if (retryMode) {
+                    wrongQuestions = wrongQuestions.filter(q => q !== currentQuestion);
+                }
+
+                generateQuestion(); // إنشاء سؤال جديد
             } else {
-                attempts++;  // زيادة عداد المحاولات
-                if (attempts < 2) {
-                    resultElement.textContent = 'إجابة خاطئة، حاول مرة أخرى!';
-                    resultElement.style.color = 'red';
-                } else {
-                    resultElement.textContent = `إجابة خاطئة، الإجابة الصحيحة هي: ${correctAnswer}`;
-                    resultElement.style.color = 'red';
-                    setTimeout(generateQuestion, 2000);  // الانتقال للسؤال التالي بعد عرض الإجابة الصحيحة
+                resultElement.textContent = 'إجابة خاطئة، حاول مرة أخرى!';
+                resultElement.style.color = 'red';
+
+                // إذا كان هذا سؤالاً جديدًا وليس في وضع المحاولة، أضفه إلى قائمة الأخطاء
+                if (!retryMode) {
+                    wrongQuestions.push(currentQuestion);
                 }
             }
+
             document.getElementById('answer').value = '';  // إعادة ضبط الحقل
+        }
+
+        // إعادة الاختبار على الأرقام التي تم الخطأ فيها
+        function retryWrongAnswers() {
+            retryMode = true;
+            generateQuestion();  // بدء الأسئلة من جديد بناءً على الأخطاء
+            document.getElementById('retrySection').style.display = 'none'; // إخفاء زر المحاولة
         }
 
         // بدء الاختبار
