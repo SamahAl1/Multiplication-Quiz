@@ -4,94 +4,139 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>اختيار جدول الضرب</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600&display=swap" rel="stylesheet">
     <style>
-        body { font-family: Arial, sans-serif; text-align: center; direction: rtl; }
-        h1 { color: #333; }
-        select, button { margin: 10px; padding: 15px 30px; font-size: 18px; }
+        /* الخطوط والألوان الأساسية */
+        body {
+            font-family: 'Cairo', sans-serif;
+            background-color: #f5f7fa;
+            color: #333;
+            text-align: center;
+            direction: rtl;
+            margin: 0;
+            padding: 0;
+        }
+
+        h1 {
+            color: #2c3e50;
+            font-size: 36px;
+            margin-top: 20px;
+            font-weight: 600;
+            animation: fadeIn 1s ease-in-out; /* تأثير دخول النص */
+        }
+
+        button {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            font-size: 18px;
+            border-radius: 10px;
+            margin: 10px;
+            cursor: pointer;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            font-weight: bold;
+        }
+
+        button:hover {
+            background-color: #2980b9;
+            transform: scale(1.05); /* تكبير الزر عند التمرير */
+        }
+
+        button:active {
+            transform: scale(0.95); /* تصغير الزر عند الضغط */
+            background-color: #1c6d9b;
+        }
+
+        #question {
+            font-size: 28px;
+            margin: 20px 0;
+            color: #34495e;
+        }
+
+        #result {
+            font-size: 22px;
+            margin-top: 20px;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        .correct {
+            color: #27ae60;
+            animation: bounceIn 0.5s ease-in-out; /* تأثير متحرك عند الإجابة الصحيحة */
+        }
+
+        .incorrect {
+            color: #e74c3c;
+            animation: shake 0.5s ease-in-out; /* اهتزاز عند الإجابة الخاطئة */
+        }
+
+        #finishedMessage p {
+            font-size: 24px;
+            color: #27ae60;
+            font-weight: bold;
+        }
+
+        input[type="text"], input[type="number"] {
+            font-size: 20px;
+            padding: 10px;
+            border: 2px solid #ccc;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            transition: all 0.3s ease;
+        }
+
+        input[type="text"]:focus, input[type="number"]:focus {
+            border-color: #3498db;
+            outline: none;
+            box-shadow: 0 0 8px rgba(52, 152, 219, 0.5); /* ظل خفيف عند التركيز */
+        }
+
+        /* التأثيرات المتحركة */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes bounceIn {
+            0% { transform: scale(0.5); }
+            60% { transform: scale(1.2); }
+            100% { transform: scale(1); }
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            20%, 60% { transform: translateX(-10px); }
+            40%, 80% { transform: translateX(10px); }
+        }
     </style>
 </head>
 <body>
     <h1>اختر الخيار المناسب</h1>
+    
+    <!-- زر مراجعة جدول الضرب مع الاختبار -->
+    <button onclick="chooseTable('reviewWithTest')">مراجعة جدول الضرب مع الاختبار</button>
 
-    <!-- قائمة منسدلة لمراجعة جدول معين مع اختباره -->
-    <label for="reviewWithTest">مراجعة جدول الضرب مع الاختبار:</label>
-    <select id="reviewWithTest">
-        <option value="">اختر جدولاً</option>
-        <option value="2">2</option>
-        <option value="3">3</option>
-        <!-- أكمل باقي الجداول حتى 12 -->
-        <option value="12">12</option>
-    </select>
-    <button onclick="chooseTable('reviewWithTest')">اذهب</button>
+    <!-- زر اختيار جدول معين للاختبار -->
+    <button onclick="chooseTable('testOnly')">اختيار جدول معين للاختبار</button>
 
-    <!-- قائمة منسدلة لاختيار جدول معين للاختبار فقط -->
-    <label for="testOnly">اختيار جدول معين للاختبار:</label>
-    <select id="testOnly">
-        <option value="">اختر جدولاً</option>
-        <option value="2">2</option>
-        <option value="3">3</option>
-        <!-- أكمل باقي الجداول حتى 12 -->
-        <option value="12">12</option>
-    </select>
-    <button onclick="chooseTable('testOnly')">اذهب</button>
-
-    <!-- خيار الاختبار النهائي لجميع الجداول -->
+    <!-- زر الاختبار النهائي لجميع الجداول -->
     <button onclick="location.href='final_test.html'">الاختبار النهائي لجميع الجداول</button>
 
     <script>
-        // دالة لاختيار الجدول بناءً على نوع الاختبار
+        // دالة لاختيار الجدول بناءً على نوع الاختبار (مراجعة مع اختبار أو اختبار فقط)
         function chooseTable(type) {
-            let table;
-            if (type === 'reviewWithTest') {
-                table = document.getElementById('reviewWithTest').value;
-                markTableAsReviewed(table);
-            } else if (type === 'testOnly') {
-                table = document.getElementById('testOnly').value;
-            }
-
-            if (table) {
+            const table = prompt("اختر رقم جدول الضرب من 2 إلى 12:");
+            if (table >= 2 && table <= 12) {
                 if (type === 'reviewWithTest') {
                     location.href = 'review.html?table=' + table;
                 } else if (type === 'testOnly') {
                     location.href = 'test.html?table=' + table;
                 }
             } else {
-                alert("يرجى اختيار جدول.");
+                alert("يرجى إدخال رقم صحيح بين 2 و 12.");
             }
         }
-
-        // دالة لتخزين الجداول التي تم مراجعتها في LocalStorage
-        function markTableAsReviewed(table) {
-            let reviewedTables = JSON.parse(localStorage.getItem('reviewedTables')) || [];
-            if (!reviewedTables.includes(table)) {
-                reviewedTables.push(table);
-                localStorage.setItem('reviewedTables', JSON.stringify(reviewedTables));
-            }
-        }
-
-        // دالة لتحميل الجداول التي تم مراجعتها وإضافة علامة صح عليها
-        function loadReviewedTables() {
-            const reviewedTables = JSON.parse(localStorage.getItem('reviewedTables')) || [];
-            const reviewSelect = document.getElementById('reviewWithTest');
-            const testSelect = document.getElementById('testOnly');
-
-            for (let i = 0; i < reviewSelect.options.length; i++) {
-                const option = reviewSelect.options[i];
-                if (reviewedTables.includes(option.value)) {
-                    option.textContent = option.value + " ✓";
-                }
-            }
-
-            for (let i = 0; i < testSelect.options.length; i++) {
-                const option = testSelect.options[i];
-                if (reviewedTables.includes(option.value)) {
-                    option.textContent = option.value + " ✓";
-                }
-            }
-        }
-
-        // تحميل الجداول التي تم مراجعتها عند فتح الصفحة
-        window.onload = loadReviewedTables;
     </script>
 </body>
 </html>
