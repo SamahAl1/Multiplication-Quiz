@@ -7,33 +7,69 @@
     <style>
         body { font-family: Arial, sans-serif; text-align: center; direction: rtl; }
         h1 { color: #333; }
-        button { margin: 10px; padding: 15px 30px; font-size: 18px; }
+        select, button { margin: 10px; padding: 15px 30px; font-size: 18px; }
     </style>
 </head>
 <body>
     <h1>اختر الخيار المناسب</h1>
     
-    <!-- خيار مراجعة جدول معين مع اختباره -->
-    <button onclick="chooseTable('reviewWithTest')">مراجعة جدول الضرب مع الاختبار</button>
+    <!-- قائمة منسدلة لمراجعة جدول معين مع اختباره -->
+    <label for="reviewSelect">اختر جدول المراجعة مع الاختبار:</label>
+    <select id="reviewSelect">
+        <option value="" disabled selected>اختر جدول الضرب</option>
+        <option value="2">جدول 2</option>
+        <option value="3">جدول 3</option>
+        <option value="4">جدول 4</option>
+        <option value="5">جدول 5</option>
+        <option value="6">جدول 6</option>
+        <option value="7">جدول 7</option>
+        <option value="8">جدول 8</option>
+        <option value="9">جدول 9</option>
+        <option value="10">جدول 10</option>
+        <option value="11">جدول 11</option>
+        <option value="12">جدول 12</option>
+    </select>
+    <button onclick="chooseTable('reviewWithTest')">ابدأ المراجعة مع الاختبار</button>
 
-    <!-- خيار اختيار جدول معين والاختبار فيه -->
-    <button onclick="chooseTable('testOnly')">اختيار جدول معين للاختبار</button>
+    <!-- قائمة منسدلة لاختيار جدول معين للاختبار -->
+    <label for="testSelect">اختر جدول للاختبار:</label>
+    <select id="testSelect">
+        <option value="" disabled selected>اختر جدول الضرب</option>
+        <option value="2">جدول 2</option>
+        <option value="3">جدول 3</option>
+        <option value="4">جدول 4</option>
+        <option value="5">جدول 5</option>
+        <option value="6">جدول 6</option>
+        <option value="7">جدول 7</option>
+        <option value="8">جدول 8</option>
+        <option value="9">جدول 9</option>
+        <option value="10">جدول 10</option>
+        <option value="11">جدول 11</option>
+        <option value="12">جدول 12</option>
+    </select>
+    <button onclick="chooseTable('testOnly')">ابدأ الاختبار</button>
 
-    <!-- خيار الاختبار النهائي لجميع الجداول -->
+    <!-- زر الاختبار النهائي لجميع الجداول -->
     <button onclick="location.href='final_test.html'">الاختبار النهائي لجميع الجداول</button>
 
     <script>
         // دالة لاختيار الجدول بناءً على نوع الاختبار (مراجعة مع اختبار أو اختبار فقط)
         function chooseTable(type) {
-            const table = prompt("اختر رقم جدول الضرب من 2 إلى 12:");
-            if (table >= 2 && table <= 12) {
+            let table;
+            if (type === 'reviewWithTest') {
+                table = document.getElementById('reviewSelect').value;
+            } else if (type === 'testOnly') {
+                table = document.getElementById('testSelect').value;
+            }
+
+            if (table) {
                 if (type === 'reviewWithTest') {
                     location.href = 'review.html?table=' + table;
                 } else if (type === 'testOnly') {
                     location.href = 'test.html?table=' + table;
                 }
             } else {
-                alert("يرجى إدخال رقم صحيح بين 2 و 12.");
+                alert("يرجى اختيار جدول الضرب.");
             }
         }
     </script>
