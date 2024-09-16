@@ -19,11 +19,14 @@
     <button onclick="location.href='test.html?table=' + table">لقد انتهيت</button>
 
     <script>
-        // الحصول على الرقم من الرابط
         const urlParams = new URLSearchParams(window.location.search);
         const table = urlParams.get('table');
 
-        // عرض جدول الضرب
+        if (!table) {
+            alert("يرجى اختيار جدول.");
+            location.href = 'index.html';
+        }
+
         const tableElement = document.getElementById('multiplicationTable');
         for (let i = 1; i <= 12; i++) {
             const listItem = document.createElement('li');
