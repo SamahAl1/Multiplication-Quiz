@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>مراجعة جدول الضرب</title>
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; }
+        h1 { color: #333; }
+        ul { list-style-type: none; padding: 0; }
+        li { font-size: 24px; margin: 5px 0; }
+        button { margin-top: 20px; padding: 10px 20px; font-size: 18px; }
+    </style>
+</head>
+<body>
+    <h1>مراجعة جدول الضرب</h1>
+    <ul id="multiplicationTable"></ul>
+    
+    <button onclick="location.href='test.html?table=' + table">لقد انتهيت</button>
+
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        const table = urlParams.get('table');
+
+        if (!table) {
+            alert("يرجى اختيار جدول.");
+            location.href = 'index.html';
+        }
+
+        const tableElement = document.getElementById('multiplicationTable');
+        for (let i = 1; i <= 12; i++) {
+            const listItem = document.createElement('li');
+            listItem.textContent = `${table} × ${i} = ${table * i}`;
+            tableElement.appendChild(listItem);
+        }
+    </script>
+</body>
+</html>
