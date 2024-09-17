@@ -3,129 +3,145 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>اختبار جدول الضرب</title>
+    <title>اختيار جدول الضرب</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600&display=swap" rel="stylesheet">
     <style>
+        /* الخطوط والألوان الأساسية */
         body {
-            font-family: Arial, sans-serif;
-            background-color: #f0f0f0;
+            font-family: 'Cairo', sans-serif;
+            background-color: #f5f7fa;
             color: #333;
             text-align: center;
+            direction: rtl;
             margin: 0;
-            padding: 20px;
+            padding: 0;
         }
-        .container {
-            max-width: 600px;
-            margin: 0 auto;
-            background-color: #fff;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        }
+
         h1 {
-            font-size: 24px;
-            margin-bottom: 20px;
+            color: #2c3e50;
+            font-size: 36px;
+            margin-top: 20px;
+            font-weight: 600;
+            animation: fadeIn 1s ease-in-out; /* تأثير دخول النص */
         }
+
         button {
-            background-color: #007bff;
+            background-color: #3498db;
             color: white;
-            padding: 10px 20px;
             border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            margin-top: 10px;
-        }
-        button:hover {
-            background-color: #0056b3;
-        }
-        .progress-bar {
-            height: 25px;
-            background-color: #4caf50;
-            width: 0%;
-            text-align: center;
-            color: white;
-            line-height: 25px;
-            border-radius: 5px;
-        }
-        .question {
+            padding: 15px 30px;
             font-size: 18px;
-            margin: 20px 0;
+            border-radius: 10px;
+            margin: 10px;
+            cursor: pointer;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            font-weight: bold;
         }
-        .answer-input {
+
+        button:hover {
+            background-color: #2980b9;
+            transform: scale(1.05); /* تكبير الزر عند التمرير */
+        }
+
+        button:active {
+            transform: scale(0.95); /* تصغير الزر عند الضغط */
+            background-color: #1c6d9b;
+        }
+
+        select {
+            font-size: 20px;
             padding: 10px;
-            font-size: 16px;
-            width: 100px;
-            margin: 10px 0;
+            margin-top: 20px;
+            border: 2px solid #ccc;
+            border-radius: 5px;
+            background-color: #ecf0f1;
+            transition: all 0.3s ease;
         }
-        .feedback {
-            font-size: 16px;
-            margin: 10px 0;
+
+        select:focus {
+            border-color: #3498db;
+            outline: none;
+            box-shadow: 0 0 8px rgba(52, 152, 219, 0.5); /* ظل خفيف عند التركيز */
+        }
+
+        #result {
+            font-size: 22px;
+            margin-top: 20px;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        .correct {
+            color: #27ae60;
+            animation: bounceIn 0.5s ease-in-out; /* تأثير متحرك عند الإجابة الصحيحة */
+        }
+
+        .incorrect {
+            color: #e74c3c;
+            animation: shake 0.5s ease-in-out; /* اهتزاز عند الإجابة الخاطئة */
+        }
+
+        #finishedMessage p {
+            font-size: 24px;
+            color: #27ae60;
+            font-weight: bold;
+        }
+
+        /* التأثيرات المتحركة */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes bounceIn {
+            0% { transform: scale(0.5); }
+            60% { transform: scale(1.2); }
+            100% { transform: scale(1); }
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            20%, 60% { transform: translateX(-10px); }
+            40%, 80% { transform: translateX(10px); }
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>اختبار جدول الضرب</h1>
-        <div class="progress-container">
-            <div class="progress-bar" id="progress-bar"></div>
-        </div>
-        <div id="quiz-content">
-            <div class="question" id="question">السؤال هنا</div>
-            <input type="number" id="answer" class="answer-input" placeholder="الإجابة" />
-            <div id="feedback" class="feedback"></div>
-            <button onclick="checkAnswer()">إجابة</button>
-        </div>
-    </div>
+    <h1>اختر جدول الضرب</h1>
+    
+    <!-- القائمة المنسدلة لاختيار جدول الضرب -->
+    <select id="tableSelect">
+        <option value="" disabled selected>اختر جدول الضرب</option>
+        <option value="2">الجدول 2</option>
+        <option value="3">الجدول 3</option>
+        <option value="4">الجدول 4</option>
+        <option value="5">الجدول 5</option>
+        <option value="6">الجدول 6</option>
+        <option value="7">الجدول 7</option>
+        <option value="8">الجدول 8</option>
+        <option value="9">الجدول 9</option>
+        <option value="10">الجدول 10</option>
+        <option value="11">الجدول 11</option>
+        <option value="12">الجدول 12</option>
+    </select>
+    
+    <!-- زر بدء المراجعة أو الاختبار -->
+    <button onclick="startReviewOrTest('reviewWithTest')">مراجعة جدول الضرب مع الاختبار</button>
+    <button onclick="startReviewOrTest('testOnly')">اختبار جدول الضرب</button>
 
     <script>
-        const questions = [
-            { num1: 2, num2: 3 },
-            { num1: 4, num2: 5 },
-            { num1: 6, num2: 7 },
-            { num1: 8, num2: 9 },
-        ];
-
-        let currentQuestionIndex = 0;
-        let correctAnswers = 0;
-
-        function loadQuestion() {
-            const question = questions[currentQuestionIndex];
-            document.getElementById('question').innerText = `كم حاصل ضرب ${question.num1} × ${question.num2}؟`;
-            document.getElementById('answer').value = '';
-            document.getElementById('feedback').innerText = '';
-            updateProgress();
-        }
-
-        function checkAnswer() {
-            const question = questions[currentQuestionIndex];
-            const userAnswer = parseInt(document.getElementById('answer').value);
-            const correctAnswer = question.num1 * question.num2;
-
-            if (userAnswer === correctAnswer) {
-                document.getElementById('feedback').innerText = 'إجابة صحيحة!';
-                correctAnswers++;
+        function startReviewOrTest(type) {
+            const table = document.getElementById('tableSelect').value;
+            if (table) {
+                if (type === 'reviewWithTest') {
+                    location.href = 'review.html?table=' + table;
+                } else if (type === 'testOnly') {
+                    location.href = 'test.html?table=' + table;
+                }
             } else {
-                document.getElementById('feedback').innerText = `إجابة خاطئة! الإجابة الصحيحة هي ${correctAnswer}`;
-            }
-
-            currentQuestionIndex++;
-            if (currentQuestionIndex < questions.length) {
-                setTimeout(loadQuestion, 1000); // انتظار لمدة ثانية قبل الانتقال للسؤال التالي
-            } else {
-                setTimeout(showResults, 1000); // إظهار النتائج بعد آخر سؤال
+                alert('يرجى اختيار جدول الضرب من القائمة.');
             }
         }
-
-        function updateProgress() {
-            const progress = ((currentQuestionIndex / questions.length) * 100) + '%';
-            document.getElementById('progress-bar').style.width = progress;
-        }
-
-        function showResults() {
-            const resultMessage = `لقد أجبت بشكل صحيح على ${correctAnswers} من أصل ${questions.length} أسئلة.`;
-            document.getElementById('quiz-content').innerHTML = `<h2>${resultMessage}</h2>`;
-        }
-
-        window.onload = loadQuestion;
     </script>
 </body>
 </html>
